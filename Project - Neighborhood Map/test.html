@@ -3,6 +3,7 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script href="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/knockout/dist/knockout.js"</script>
     <script href="bower_components/knockout/dist/knockout.debug.js"></script>
@@ -81,7 +82,6 @@
       <div id="map"></div>
     </div>
     <script>
-
       var locations = [
             {title: '1900 E Ocean Blvd', location: {lat: 33.764279, lng: -118.169579}},
             {title: 'Long Beach Museum of Art', location: {lat: 33.763472, lng: -118.164797}},
@@ -93,7 +93,6 @@
             {title: 'Hilltop Park', location: {lat: 33.799373, lng: -118.165617}},
             {title: 'Aquarium of the Pacific', location: {lat:33.763187, lng:-118.196951}}
           ];
-
       var map;
       // Create a new blank array for all the listing markers.
       var markers = [];
@@ -172,18 +171,6 @@
           styles: styles,
           mapTypeControl: false
         });
-        // These are the real estate listings that will be shown to the user.
-        // Normally we'd have these in a database instead.
-     /*   var locations = [
-          {title: '1900 E Ocean Blvd', location: {lat: 33.764279, lng: -118.169579}},
-          {title: 'Long Beach Museum of Art', location: {lat: 33.763472, lng: -118.164797}},
-          {title: 'Belmont Brewing Company', location: {lat: 33.759304, lng: -118.148184}},
-          {title: 'Joe Josts', location: {lat: 33.783141, lng: -118.158685}},
-          {title: 'Park Pantry', location: {lat: 33.766724, lng: -118.165607}},
-          {title: 'Hot Java', location: {lat: 33.766973, lng: -118.165693}},
-          {title: 'Fat Tomatoe Pizza', location: {lat: 33.766617, lng: -118.165114}},
-          {title: 'Hilltop Park', location: {lat: 33.799373, lng: -118.165617}},
-        ];  */
 
         var largeInfowindow = new google.maps.InfoWindow();
         // Style the markers a bit. This will be our listing marker icon.
@@ -238,57 +225,37 @@
           var streetViewService = new google.maps.StreetViewService();
           var radius = 50;
 
-         /* function loadData() {
-            var $wikiElem = $('#wikipedia-links');
+          $(document).ready(function () {
 
+        //  function loadData() {
+            var $wikiElem = $('#wikipedia-links');
             // Clear out old data before new request
-            $wikiElem.text("");
-          }*/
+           // $wikiElem.text("");
+         // }
+    //  display wikipedia api to info window
 
           var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + markers[i] + '&format=json&callback=wikiCallback';
-
           var wikiRequestTimeout = setTimeout(function() {
             $wikiElem.text("failed to get wikipedia resources");
-          }, 8000);
-
+          }, 2000);
           $.ajax({
             url: wikiUrl,
             dataType: "jsonp",
             success: function( response ) {
               var articleList = response [1];
-
-             // for (var i = 0; i < articleList.length; i++) {
-            //    articleStr = articleList[i];
-            //    var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-              //  $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-            //  };
+              for (var i = 0; i < articleList.length; i++) {
+                articleStr = articleList[i];
+                var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+              };
             }
           })
-
-
-
-
-
-
+          });
           // In case the status is OK, which means the pano was found, compute the
           // position of the streetview image, then calculate the heading, then get a
           // panorama from that and set the options
-     /*     function wikiArticle() {
-          var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + locations[i] + '&format=json&callback=wikiCallback';
 
-            $.ajax( {
-              url: wikiUrl,
-              data: queryData,
-              dataType: 'json',
-              type: 'POST',
-              headers: { 'Api-User-Agent': 'Example/1.0' },
-              success: function(data) {
-                 // do something with data
-              }
-          } );
-
-}*/
-        function getStreetView(data, status) {
+      /*  function getStreetView(data, status) {
             if (status == google.maps.StreetViewStatus.OK) {
               var nearStreetViewLocation = data.location.latLng;
               var heading = google.maps.geometry.spherical.computeHeading(
@@ -311,10 +278,10 @@
           // Use streetview service to get the closest streetview image within
           // 50 meters of the markers position
           streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-          // Open the infowindow on the correct marker.
+          // Open the infowindow on the correct marker.*/
           infowindow.open(map, marker);
         }
-      }
+      };
       // This function will loop through the markers array and display them all.
       function showListings() {
         var bounds = new google.maps.LatLngBounds();
@@ -345,49 +312,16 @@
         return markerImage;
       }
   ko.applyBindings(new ViewModel(locations, location, marker, markers));
-}
-
+};
       var ViewModel = function (locations) {
-
           //list of locations
           this.locList = ko.observableArray();
           for (var i = 0; i < locations.length; i++) {
               this.locList.push(locations[i]);
           }
-
           this.menu = ko.observable(false);
-
           //current filter text
           this.currentLocation = ko.observable("");
-
-    /*      this.toggleMenu = function() {
-              this.menu(!this.menu());
-          }; //toggleMenu  */
-
-     /*     this.locationClick = function (location) {
-              marker = new google.maps.Marker({
-                  map: map,
-                  position: location.location,
-                  title: location.title,
-                  animation: google.maps.Animation.BOUNCE,
-                  id: locations.indexOf(location)
-              });
-              marker.addListener('click', toggleBounce);
-
-
-              function toggleBounce() {
-              if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-              } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-              }
-            }
-
-              // Create an onclick event to open an infowindow at each marker.
-         //     marker.addListener('click', function() {
-          //        populateInfoWindow(this, largeInfowindow);
-          //    });
-      }*/
           //list item click function
           this.locationClick = function (marker) {
               var largeInfowindow = new google.maps.InfoWindow();
@@ -395,13 +329,11 @@
               for (var i = 0; i < markers.length; i++) {
                   if (markers[i].title === marker.title) {
                       markers[i].setAnimation(google.maps.Animation.BOUNCE);
-
                     //  marker.AnimateTimeout(markers[i]);
                     //  getVenue(marker, largeInfowindow, markers[i]);
                   }
               }
           }; //.locationClick*/
-
           //filter markers based on input text on button click
           this.filterMarker = function () {
               if (this.currentLocation() === '') {
@@ -413,7 +345,6 @@
                   } //.for
               } //.else
           }; // .filter
-
           //filter by text input
           this.filter = ko.computed(() => {
               if (!this.currentLocation()) {
@@ -432,32 +363,11 @@
           }); // .filter
       }; //.viewmodel
 
-      //locations model
       var Location = function (data) {
           this.location = data.location;
           this.title = data.title;
           this.showLocation = ko.observable(data.showLocation);
-
-     /*     var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + data.title + '&format=json&callback=wikiCallback';
-
-          $.ajax({
-            url: wikiUrl,
-            dataType: "jsonp",
-            success: function( response ) {
-              var articleList = response[1];
-
-
-                articleStr = articleList[i];
-                var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-              };
-            }
-          })*/
       };
-
-
-      //ko.applyBindings(new ViewModel(locations));
-
     </script>
 
     <script async defer
