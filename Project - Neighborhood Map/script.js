@@ -64,6 +64,13 @@ var locations = [{
         type: 'Lookout'
     },
     {
+        title: '1900 E Ocean Blvd',
+        location: {
+          lat: 33.764145,
+          lng: -118.169622
+        }
+    },
+    {
         title: 'Aquarium of the Pacific',
         location: {
             lat: 33.763187,
@@ -252,6 +259,7 @@ function initMap() {
                             articleStr = articleList[i];
                             var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                             wikiElem.push(infowindow.setContent(marker.title + '<li><a href="' + url + '">' + articleStr + '</a></li>'));
+                            clearTimeout(wikiRequestTimeout);
                         };
                     }
                 });
@@ -332,12 +340,12 @@ var ViewModel = function(locations) {
     this.locationClick = function(marker) {
         var largeInfowindow = new google.maps.InfoWindow();
         //(markers[0].title);
-        google.maps.event.trigger(, 'click');
+   //     google.maps.event.trigger(, 'click');
 
         for (var i = 0; i < markers.length; i++) {
             if (markers[i].title === marker.title) {
                 markers[i].setAnimation(google.maps.Animation.BOUNCE);
-
+                google.maps.event.trigger(markers[i], 'click');
                 //  marker.AnimateTimeout(markers[i]);
                 //  getVenue(marker, largeInfowindow, markers[i]);
             }
