@@ -26,7 +26,7 @@
           <div>
             <!--<input id="show-listings" type="button" value="Show Spots">
             <input id="hide-listings" type="button" value="Hide Spots">-->
-            <input data-bind="value: currentLocation, valueUpdate: 'afterkeydown', enterKey: filterMarker" placeholder='Search...'>
+            <input data-bind="value: currentLocation, valueUpdate: 'afterkeydown', enterKey: filterMarker" placeholder='Search...' class="font">
           </div>
           <ul data-bind="foreach: filter">
             <li id="item" data-bind="click: $root.locationClick"><span data-bind="text: $data.title"></span></li>
@@ -48,7 +48,7 @@
 
     <script async defer
         src=
-        "https://maps.googleapis.com/maps/api/js?key=AIzaSyDJfY-jP9Ep-Ri966A5wVv2i37XRACVxzs&libraries=geometry&v=3&callback=initMap">
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyDJfY-jP9Ep-Ri966A5wVv2i37XRACVxzs&libraries=geometry&v=3&callback=initMap" onerror="errorHandling()">
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
