@@ -200,9 +200,12 @@ function initMap() {
         // Create an onclick event to open the large infowindow at each marker.
         marker.addListener('click', popluateInfo);
 
+        marker.addListener('click', toggleBounce);
+
         marker.addListener('mouseover', iconSet);
 
         marker.addListener('mouseout', iconDefault);
+
     }
 
     function iconDefault() {
@@ -217,8 +220,14 @@ function initMap() {
         populateInfoWindow(this, largeInfowindow);
     }
 
-    //   document.getElementById('show-listings').addEventListener('click', showListings);
-    //   document.getElementById('hide-listings').addEventListener('click', hideListings);
+    function toggleBounce() {
+        if (this.getAnimation() !== null) {
+          this.setAnimation(null);
+        } else {
+            this.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+
     //populates infowindow
     function populateInfoWindow(marker, infowindow) {
         // Check to make sure the infowindow is not already opened on this marker.
@@ -235,11 +244,7 @@ function initMap() {
 
             $(document).ready(function() {
 
-                //function loadData() {
                 var $wikiElem = $('#wikipedia-links');
-                // Clear out old data before new request
-              //  $wikiElem.text("");
-                //  }
                 //  display wikipedia api to info window
                 var wikiElem = [];
 
@@ -260,35 +265,11 @@ function initMap() {
                             var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                             wikiElem.push(infowindow.setContent(marker.title + '<li><a href="' + url + '">' + articleStr + '</a></li>'));
                             clearTimeout(wikiRequestTimeout);
-                        };
+                        }
                     }
                 });
             });
 
-            /*   function getStreetView(data, status) {
-                   if (status == google.maps.StreetViewStatus.OK) {
-                     var nearStreetViewLocation = data.location.latLng;
-                     var heading = google.maps.geometry.spherical.computeHeading(
-                       nearStreetViewLocation, marker.position);
-                       infowindow.setContent('<div id="pano"></div>');
-                       var panoramaOptions = {
-                         position: nearStreetViewLocation,
-                         pov: {
-                           heading: heading,
-                           pitch: 30
-                         }
-                       };
-                     var panorama = new google.maps.StreetViewPanorama(
-                       document.getElementById('pano'), panoramaOptions);
-                   } else {
-                     infowindow.setContent('<div>' + marker.title + '</div>' +
-                       '<div>No Street View Found</div>');
-                   }
-                 }
-                 // Use streetview service to get the closest streetview image within
-                 // 50 meters of the markers position
-                 streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-                 // Open the infowindow on the correct marker.*/
             infowindow.open(map, marker);
 
         }
@@ -339,17 +320,20 @@ var ViewModel = function(locations) {
     //list item click function
     this.locationClick = function(marker) {
         var largeInfowindow = new google.maps.InfoWindow();
-        //(markers[0].title);
-   //     google.maps.event.trigger(, 'click');
 
         for (var i = 0; i < markers.length; i++) {
             if (markers[i].title === marker.title) {
                 markers[i].setAnimation(google.maps.Animation.BOUNCE);
                 google.maps.event.trigger(markers[i], 'click');
-                //  marker.AnimateTimeout(markers[i]);
-                //  getVenue(marker, largeInfowindow, markers[i]);
             }
         }
+        window.setTimeout(function() {
+          for (var i = 0; i < markers.length; i++) {
+            if (markers[i].title === marker.title) {
+              markers[i].setAnimation(null);
+            }
+          }
+        }, 2100);
     }; //.locationClick*/
     //filter markers based on input text on button click
     this.filterMarker = function() {
@@ -358,16 +342,15 @@ var ViewModel = function(locations) {
                 var match = locations[i].title.toLowerCase().indexOf(this.currentLocation().toLowerCase()) > -1;
                 this.locList()[i].showLocation = match;
                 markers[i].setVisible(match);
-            } //.for
-        } //.else
-    }; // .filter
-    //filter by text input
+            }
+        }
+    };
     this.filter = ko.computed(() => {
         if (!this.currentLocation()) {
             // No input found, loop through markers setting them visible, return all location
             for (var i = 0; i < markers.length; i++) {
                 markers[i].setVisible(true);
-            } //.for
+            }
             return this.locList();
         } else {
             // input found, match keyword to filter
@@ -375,9 +358,9 @@ var ViewModel = function(locations) {
                 this.filterMarker();
                 return location.title.toLowerCase().indexOf(this.currentLocation().toLowerCase()) !== -1;
             });
-        } //.conditional
-    }); // .filter
-}; //.viewmodel
+        }
+    });
+};
 
 function errorHandling() {
     alert("Google Maps has failed to load. Please check your internet connection and try again.");

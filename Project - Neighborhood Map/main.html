@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <!--<script href="bower_components/jquery/dist/jquery.js"></script>-->
 
+    <title>Neighborhood Map Project</title>
   </head>
   <body>
 
@@ -22,16 +22,15 @@
           <h3>Explore</h3>
         </div>
 
-        <ul class="list-unstyled components">
+        <div class="list-unstyled components">
           <div>
-            <!--<input id="show-listings" type="button" value="Show Spots">
-            <input id="hide-listings" type="button" value="Hide Spots">-->
+
             <input data-bind="value: currentLocation, valueUpdate: 'afterkeydown', enterKey: filterMarker" placeholder='Search...' class="font">
           </div>
           <ul data-bind="foreach: filter">
             <li id="item" data-bind="click: $root.locationClick"><span data-bind="text: $data.title"></span></li>
           </ul>
-        </ul>
+        </div>
       </nav>
 
       <div id="content">
@@ -42,6 +41,7 @@
           <div id="map"></div>
         </div>
       </div>
+
     </div>
 
 
