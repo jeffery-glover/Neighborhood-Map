@@ -225,7 +225,7 @@ function initMap() {
           this.setAnimation(null);
         } else {
             this.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function(){ marker.setAnimation(null); }, 750);
+            //setTimeout(function(){ marker.setAnimation(null); }, 750);
         }
       }
 
