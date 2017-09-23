@@ -225,6 +225,7 @@ function initMap() {
           this.setAnimation(null);
         } else {
             this.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function(){ marker.setAnimation(null); }, 750);
         }
       }
 
@@ -323,7 +324,6 @@ var ViewModel = function(locations) {
 
         for (var i = 0; i < markers.length; i++) {
             if (markers[i].title === marker.title) {
-                markers[i].setAnimation(google.maps.Animation.BOUNCE);
                 google.maps.event.trigger(markers[i], 'click');
             }
         }
